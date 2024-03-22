@@ -31,6 +31,34 @@ def change(x, y):
     aim.x = x
     aim.y = y
 
+def move_food():
+    """Move food randomly one step at a time."""
+    global food
+
+    # Generar un vector de movimiento aleatorio para la comida
+    movement = vector(randrange(-1, 2) * 10, randrange(-1, 2) * 10)
+
+    # Calcular la nueva posición propuesta para la comida
+    new_food_position = food + movement
+
+    # Verificar si la nueva posición está dentro de los límites
+    if -200 < new_food_position.x < 190 and -200 < new_food_position.y < 190:
+        food = new_food_position
+
+    # Actualizar la comida en la ventana
+    clear()
+    square(food.x, food.y, 9, food_color)
+    for body in snake:
+        square(body.x, body.y, 9, snake_color)
+    update()
+
+    # Llamar recursivamente a esta función después de un tiempo
+    ontimer(move_food, 1000)  # Cambia el valor para ajustar la velocidad de movimiento de la comida
+
+# Iniciar el movimiento aleatorio de la comida
+move_food()
+
+
 
 def inside(head):
     """Return True if head inside boundaries."""
@@ -63,7 +91,7 @@ def move():
 
     square(food.x, food.y, 9, food_color)
     update()
-    ontimer(move, 50)
+    ontimer(move, 100)
 
 
 setup(420, 420, 370, 0)
@@ -75,4 +103,5 @@ onkey(lambda: change(-10, 0), 'Left')
 onkey(lambda: change(0, 10), 'Up')
 onkey(lambda: change(0, -10), 'Down')
 move()
+move_food()
 done()
